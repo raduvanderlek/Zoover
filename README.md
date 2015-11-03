@@ -33,7 +33,7 @@ On Windows, that would be:
 Install additional dependencies using the bower package manager:
 
     bower install
-
+	
 If you want to upload a dictionary for spell-suggestions:
 
     ./ml local deploy content
@@ -82,12 +82,74 @@ These services will also print usage without param, but they support info, resta
 
 ## Loading data through mlcp
 
+Mlcp is MarkLogic's bulk load tool to load data from json, xml, triple, csv, binary and text files.
+
+You can get it from https://developer.marklogic.com/products/mlcp. Make sure you install it so that Roxy can find it (check the attribute 'mlcp-home' in ./deploy/default.properties)
+
+### Ingest json files from a directory
+
+Suppose you have json files in the directory /zoover/incoming and want to ingest them into MarkLogic. Just call the following command:
+
+- ml local mlcp IMPORT -input_file_path /zoover/incoming
+
+If you want to load it into a collection 'test' run this:
+
+- ml local mlcp IMPORT -input_file_path /zoover/incoming -output_collections test
+
 ## Loading data through REST
 
 The MarkLogic REST endpoint for this instance can be found at http://localhost:10040.
 Documents can be ingested by calling a PUT on /v1/documents and retrieved by GETting from /v1/documents. You can use a tool like Postman to try this out.
 
-Example:
+### Ingest example (PUT)
 
-We want to ingest a JSON file to the database
-http://localhost:9040/v1/documents?uri=/test2.xml&collection=deelnemers
+We want to ingest a JSON file to the database, give it an URI of 'test.json' and place it in the collection 'test'.
+
+The way to do this is by calling PUT on the following URL:
+
+- http://localhost:10040/v1/documents
+
+And passing the following URL parameters:
+
+- uri=/test.json
+- collection=test
+
+And passing the following header(s):
+
+- Content-Type: application/json
+- Optionally the digest Authorization header related to your credentials of MarkLogic
+
+### Retrieval example (GET)
+
+We want to retrieve the just inserted document.
+
+The way to do this is by calling GET on the following URL:
+
+- http://localhost:10040/v1/documents
+
+And passing the following URL parameters:
+
+- uri=/test.json
+
+And passing the following header(s):
+
+- Accept: application/json
+- Optionally the digest Authorization header related to your credentials of MarkLogic
+
+### Search example (GET)
+
+We want to search for documents within the database that corresponds to the ingested JSON file.
+
+The way to do this is by calling GET on the following URL:
+
+- http://localhost:10040/v1/search
+
+And passing the following URL parameters:
+
+- q=test (where test is the string to search for)
+- Optionally limit to a collection: collection=test
+
+And passing the following header(s):
+
+- Accept: application/json
+- Optionally the digest Authorization header related to your credentials of MarkLogic
