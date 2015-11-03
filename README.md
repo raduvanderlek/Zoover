@@ -96,6 +96,10 @@ If you want to load it into a collection 'test' run this:
 
 - ml local mlcp IMPORT -input_file_path /zoover/incoming -output_collections test
 
+### Example to load
+
+- ./ml mlcp local IMPORT -input_file_path ./ZooverData/CriteoStats_20150901_20150930.json -output_collections data
+
 ## Loading data through REST
 
 The MarkLogic REST endpoint for this instance can be found at http://localhost:10040.
